@@ -170,11 +170,11 @@ Edit `config.json` to change common defaults, variant overrides, run sizes, or t
 ```json
 "metrics": {
   "BrayCurtis": {
-    "tip_abundance_sigma": 3.1,
-    "tip_replacement_fraction": 0.10
+    "tip_abundance_sigma": 1,
+    "tip_replacement_fraction": 0.66
   },
   "BinaryDice": {
-    "tip_abundance_sigma": 3.1,
+    "tip_abundance_sigma": 1,
     "tip_replacement_fraction": 0.66
   }
 }
