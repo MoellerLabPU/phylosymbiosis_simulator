@@ -2,6 +2,8 @@
 
 A shared simulation pipeline for comparing distance-based and tree-based tests of phylosymbiosis. The pipeline runs seven model/reconstruction variants with **Bray–Curtis** and **binary Sørensen–Dice** dissimilarities, producing replicate tables, statistical summaries, and six-panel figures.
 
+Both dissimilarity measures receive terminal abundance noise and taxon replacement noise, with parameters configured separately for each measure.
+
 ## Quick start
 
 Use **Python 3.11 or newer**. Download or clone the repository, then open a terminal in the directory containing `run_simulations.py` and `config.json`.
@@ -26,17 +28,58 @@ The source package contains code and configuration; full simulation outputs are 
 
 ## Simulation variants
 
-| Configuration name | Abundance evolution | Sigma | Microbiota tree reconstruction |
-| --- | --- | ---: | --- |
-| `brownian_0p30` | Brownian motion | 0.30 | UPGMA |
-| `brownian_0p05` | Brownian motion | 0.05 | UPGMA |
-| `brownian_0p85` | Brownian motion | 0.85 | UPGMA |
-| `ou` | Ornstein–Uhlenbeck, alpha = 0.5 | 0.30 | UPGMA |
-| `white_noise` | Independent abundance draws on positive-length branches | 0.30 | UPGMA |
-| `neighbor_joining` | Brownian motion | 0.30 | Neighbor joining |
-| `complete_linkage` | Brownian motion | 0.30 | Complete linkage |
+| Bray–Curtis figure | Binary Dice figure | Configuration name | Abundance evolution | Sigma | Microbiota tree reconstruction |
+| --- | --- | --- | --- | ---: | --- |
+| Figure 1 | Figure S1 | `brownian_0p30` | Brownian motion | 0.30 | UPGMA |
+| Figure S2 | Figure S3 | `brownian_0p05` | Brownian motion | 0.05 | UPGMA |
+| Figure S4 | Figure S5 | `brownian_0p85` | Brownian motion | 0.85 | UPGMA |
+| Figure S6 | Figure S7 | `ou` | Ornstein–Uhlenbeck, alpha = 0.5 | 0.30 | UPGMA |
+| Figure S8 | Figure S9 | `white_noise` | Independent abundance draws on positive-length branches | 0.30 | UPGMA |
+| Figure S10 | Figure S11 | `neighbor_joining` | Brownian motion | 0.30 | Neighbor joining |
+| Figure S12 | Figure S13 | `complete_linkage` | Brownian motion | 0.30 | Complete linkage |
+
+Baseline Bray–Curtis produces `Figure1.*`; baseline binary Dice produces `FigureS1.*`. The remaining variants produce `FigureS2.*` through `FigureS13.*` in the order above, with Bray–Curtis before Dice for each variant. Outputs remain in separate measure-specific directories. The explicit mapping is in `config.json` under `figure_names`, indexed by variant and measure. Numbering remains fixed when only a subset of analyses is run.
 
 The white-noise variant changes abundance evolution. Taxon occupancy continues to follow inherited extinction and colonization along the host tree.
+
+## Configuration
+
+Edit `config.json` to change common defaults, variant overrides, run sizes, or the two measures' terminal noise settings. The default noise configuration is:
+
+```json
+"metrics": {
+  "BrayCurtis": {
+    "tip_abundance_sigma": 1.0,
+    "tip_replacement_fraction": 0.66
+  },
+  "BinaryDice": {
+    "tip_abundance_sigma": 1.0,
+    "tip_replacement_fraction": 0.66
+  }
+}
+```
+
+`tip_abundance_sigma` is the standard deviation of a zero-mean normal draw on the log abundance scale. Each present taxon's abundance is multiplied by `exp(Normal(0, sigma))`, then the community is normalized. Absent taxa remain absent.
+
+The default terminal taxon-replacement fraction is **0.66 for both measures**, and the abundance-noise SD is **1.0 for both measures**. These controls remain independently editable for each measure.
+
+`tip_replacement_fraction` is the expected fraction of present taxa replaced at each host tip. The replacement count is drawn from a binomial distribution and capped by the number of absent taxa. Removed taxa and arrivals are selected uniformly without replacement; arrivals come from taxa absent before replacement. Each arrival receives its paired removed taxon's abundance, preserving richness, total abundance, and the abundance variation already applied.
+
+Both processes apply to evolved and independent communities in all four simulation suites. They use separate random streams. Set either parameter to `0` to disable that process for a measure. Abundance sigma must be finite and nonnegative; replacement fraction must lie between `0` and `1`.
+
+**Binary Dice uses presence/absence (`profiles > 0`) without an abundance threshold.** Terminal abundance noise therefore does not change Dice distances when occupancy is unchanged.
+
+### Default run sizes
+
+| Setting | Default |
+| --- | --- |
+| Alternative replicates per condition | 200 |
+| Null replicates per condition | 1,000 |
+| Host-label permutations per test | 999 |
+| Host tips | 8, 15, 30, 50 |
+| Host-tree depth | 6 |
+
+The root community contains 100 taxa from a pool of 1,000, with a community-size cap of 150. The richness suite varies root richness and scales the cap to 1.5 times root richness. Parameters are used directly; the runner does not recalibrate them.
 
 ## Run selected analyses
 
@@ -122,9 +165,9 @@ Result files include:
 - `{suite}_replicates.tsv` and `{suite}_summary.tsv` for all four suites.
 - `run_configuration.json`, recording effective settings, run sizes, seeds, and validation results.
 - `roc_auc.tsv` and `roc_curves.tsv`, including AUC estimates and bootstrap confidence intervals.
-- `Figure1C_plot_data.tsv` and `Figure1D_plot_data.tsv`, containing the corresponding panel data.
+- `{figure_name}C_plot_data.tsv` and `{figure_name}D_plot_data.tsv`, containing the corresponding panel data.
 
-Every replicate table records both terminal noise parameters. Shared tree diagnostics are written to `results/tree_diagnostics.tsv`. Each analysis produces `Figure1.pdf`, `Figure1.png`, and `Figure1.svg` unless formats are restricted.
+Every replicate table records both terminal noise parameters. Shared tree diagnostics are written to `results/tree_diagnostics.tsv`. Each analysis produces its assigned `Figure1` or `FigureS1`–`FigureS13` filename in PDF, PNG, and SVG formats unless formats are restricted. The panel-data filenames use the same figure prefix.
 
 To redraw all figures after a run:
 
@@ -152,7 +195,7 @@ python3 run_simulations.py --check-only --save-trees
 
 Trees are written to `trees/depth_6/` and are generated from the same seeds during simulations whether or not they are exported.
 
-`verification.json` records noise-function checks, regression comparisons, and small integration runs covering all seven variants, both measures, all four suites, and figure generation. Those checks do not constitute a full production rerun with the revised noise settings.
+`verification.json` records checks of the current noise parameters, representative simulation tasks, and figure numbering. These checks do not constitute a full production rerun with the revised noise settings.
 
 ## Repository files
 
@@ -162,31 +205,6 @@ Trees are written to `trees/depth_6/` and are generated from the same seeds duri
 - `make_figures.py` and `plot_utils.py`: figure rendering and ROC/AUC calculations.
 - `config.json`: shared settings, separate measure-specific noise controls, and variant overrides.
 - `requirements.txt`, `verification.json`, and `LICENSE`: dependencies, verification record, and license.
-
-## Configuration
-
-Edit `config.json` to change common defaults, variant overrides, run sizes, or the two measures' terminal noise settings. The default noise configuration is:
-
-```json
-"metrics": {
-  "BrayCurtis": {
-    "tip_abundance_sigma": 1,
-    "tip_replacement_fraction": 0.66
-  },
-  "BinaryDice": {
-    "tip_abundance_sigma": 1,
-    "tip_replacement_fraction": 0.66
-  }
-}
-```
-
-`tip_abundance_sigma` is the standard deviation of a zero-mean normal draw on the log abundance scale. Each present taxon's abundance is multiplied by `exp(Normal(0, sigma))`, then the community is normalized. Absent taxa remain absent.
-
-`tip_replacement_fraction` is the expected fraction of present taxa replaced at each host tip. The replacement count is drawn from a binomial distribution and capped by the number of absent taxa. Removed taxa and arrivals are selected uniformly without replacement; arrivals come from taxa absent before replacement. Each arrival receives its paired removed taxon's abundance, preserving richness, total abundance, and the abundance variation already applied.
-
-Both processes apply to evolved and independent communities in all four simulation suites. They use separate random streams. Set either parameter to `0` to disable that process for a measure. Abundance sigma must be finite and nonnegative; replacement fraction must lie between `0` and `1`.
-
-**Binary Dice uses presence/absence (`profiles > 0`) without an abundance threshold.** Terminal abundance noise therefore does not change Dice distances when occupancy is unchanged.
 
 ## License
 

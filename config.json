@@ -1,0 +1,84 @@
+{
+  "base_seed": 20261005,
+  "final_seed_namespace": 9,
+  "host_sizes": [
+    8,
+    15,
+    30,
+    50
+  ],
+  "run_sizes": {
+    "reps": 200,
+    "null_reps": 1000,
+    "permutations": 999
+  },
+  "defaults": {
+    "tree_depth": 6.0,
+    "sigma": 0.3,
+    "turnover_multiplier": 1.1,
+    "abundance_model": "brownian",
+    "ou_alpha": 0.5,
+    "clustering": "average"
+  },
+  "metrics": {
+    "BrayCurtis": {
+      "tip_abundance_sigma": 1.0,
+      "tip_replacement_fraction": 0.66
+    },
+    "BinaryDice": {
+      "tip_abundance_sigma": 1.0,
+      "tip_replacement_fraction": 0.66
+    }
+  },
+  "figure_names": {
+    "brownian_0p30": {
+      "BrayCurtis": "Figure1",
+      "BinaryDice": "FigureS1"
+    },
+    "brownian_0p05": {
+      "BrayCurtis": "FigureS2",
+      "BinaryDice": "FigureS3"
+    },
+    "brownian_0p85": {
+      "BrayCurtis": "FigureS4",
+      "BinaryDice": "FigureS5"
+    },
+    "ou": {
+      "BrayCurtis": "FigureS6",
+      "BinaryDice": "FigureS7"
+    },
+    "white_noise": {
+      "BrayCurtis": "FigureS8",
+      "BinaryDice": "FigureS9"
+    },
+    "neighbor_joining": {
+      "BrayCurtis": "FigureS10",
+      "BinaryDice": "FigureS11"
+    },
+    "complete_linkage": {
+      "BrayCurtis": "FigureS12",
+      "BinaryDice": "FigureS13"
+    }
+  },
+  "variants": {
+    "brownian_0p30": {},
+    "brownian_0p05": {
+      "sigma": 0.05
+    },
+    "brownian_0p85": {
+      "sigma": 0.85
+    },
+    "ou": {
+      "abundance_model": "ou"
+    },
+    "white_noise": {
+      "abundance_model": "white_noise"
+    },
+    "neighbor_joining": {
+      "clustering": "nj"
+    },
+    "complete_linkage": {
+      "clustering": "complete"
+    }
+  }
+}

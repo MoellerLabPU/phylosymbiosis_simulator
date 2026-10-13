@@ -1,0 +1,60 @@
+{
+  "status": "passed",
+  "defaults": {
+    "BrayCurtis": {
+      "tip_abundance_sigma": 1.0,
+      "tip_replacement_fraction": 0.66
+    },
+    "BinaryDice": {
+      "tip_abundance_sigma": 1.0,
+      "tip_replacement_fraction": 0.66
+    }
+  },
+  "figure_names": {
+    "brownian_0p30": {
+      "BrayCurtis": "Figure1",
+      "BinaryDice": "FigureS1"
+    },
+    "brownian_0p05": {
+      "BrayCurtis": "FigureS2",
+      "BinaryDice": "FigureS3"
+    },
+    "brownian_0p85": {
+      "BrayCurtis": "FigureS4",
+      "BinaryDice": "FigureS5"
+    },
+    "ou": {
+      "BrayCurtis": "FigureS6",
+      "BinaryDice": "FigureS7"
+    },
+    "white_noise": {
+      "BrayCurtis": "FigureS8",
+      "BinaryDice": "FigureS9"
+    },
+    "neighbor_joining": {
+      "BrayCurtis": "FigureS10",
+      "BinaryDice": "FigureS11"
+    },
+    "complete_linkage": {
+      "BrayCurtis": "FigureS12",
+      "BinaryDice": "FigureS13"
+    }
+  },
+  "current_revision_checks": {
+    "parameter_and_tree_checks": 14,
+    "simulation_combinations": 14,
+    "suites_per_combination": 4,
+    "reps": 1,
+    "null_reps": 2,
+    "permutations": 19,
+    "jobs": 2,
+    "replicate_rows": 2800,
+    "fourteen_unique_figure_names_in_execution_order": "passed",
+    "figure_numbering_and_panel_data_names": "passed",
+    "single_page_pdf_figures": 14,
+    "svg_figures": 14,
+    "roc_integrals_and_panel_anchors": "passed",
+    "both_noise_parameters_in_every_replicate_table": "passed"
+  },
+  "full_production_rerun": false
+}
