@@ -1,0 +1,54 @@
+{
+  "base_seed": 20261005,
+  "final_seed_namespace": 9,
+  "host_sizes": [
+    8,
+    15,
+    30,
+    50
+  ],
+  "run_sizes": {
+    "reps": 200,
+    "null_reps": 1000,
+    "permutations": 999
+  },
+  "defaults": {
+    "tree_depth": 6.0,
+    "sigma": 0.3,
+    "turnover_multiplier": 1.1,
+    "abundance_model": "brownian",
+    "ou_alpha": 0.5,
+    "clustering": "average"
+  },
+  "metrics": {
+    "BrayCurtis": {
+      "tip_abundance_sigma": 3.1,
+      "tip_replacement_fraction": 0.1
+    },
+    "BinaryDice": {
+      "tip_abundance_sigma": 3.1,
+      "tip_replacement_fraction": 0.66
+    }
+  },
+  "variants": {
+    "brownian_0p30": {},
+    "brownian_0p05": {
+      "sigma": 0.05
+    },
+    "brownian_0p85": {
+      "sigma": 0.85
+    },
+    "ou": {
+      "abundance_model": "ou"
+    },
+    "white_noise": {
+      "abundance_model": "white_noise"
+    },
+    "neighbor_joining": {
+      "clustering": "nj"
+    },
+    "complete_linkage": {
+      "clustering": "complete"
+    }
+  }
+}
