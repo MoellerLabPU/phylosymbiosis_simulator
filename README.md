@@ -1,6 +1,6 @@
 # Phylosymbiosis simulations
 
-This page details a simulation pipeline for comparing distance-based and tree-based tests of phylosymbiosis. The pipeline runs seven model/reconstruction variants with **Bray–Curtis** and **binary Sørensen–Dice** dissimilarities, producing replicate tables, statistical summaries, and six-panel figures.
+This page details a simulation pipeline for comparing distance/dissimilarity-based and tree-based tests of phylosymbiosis. The pipeline runs seven model/reconstruction variants with **Bray–Curtis** and **binary Sørensen–Dice** dissimilarities, producing replicate tables, statistical summaries, and six-panel figures.
 
 Both dissimilarity measures receive terminal abundance noise and taxon replacement noise, with parameters configured separately for each measure.
 
